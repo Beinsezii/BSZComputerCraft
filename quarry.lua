@@ -1,3 +1,4 @@
+FUEL = true
 -- eats all fuel in inventory
 -- returns true if ate some fuel else false
 function fuel()
@@ -28,7 +29,16 @@ end
 -- returns true if complete else false
 function advance(num, direction)
     for i = 1, num, 1 do
-        if turtle.getFuelLevel() == 0 then return false end
+        -- refuel if out else end
+        if turtle.getFuelLevel() == 0 then
+            if not fuel() then
+                if FUEL then
+                    print("OUT OF FUEL")
+                    FUEL = false
+                end
+                return false
+            end
+        end
 
         if direction == "f" then
             b, s = turtle.dig()
@@ -118,14 +128,6 @@ function quarry(L, W, D)
     for cD = 1, D do
         --iter columns (width)
         for cW = 1, W do
-            -- refuel if out else end
-            if turtle.getFuelLevel() == 0 then
-                if not fuel() then
-                    print("OUT OF FUEL")
-                    return
-                end
-            end
-
             -- dig a line
             if not advance(L-1, 'f') then return false end
 
